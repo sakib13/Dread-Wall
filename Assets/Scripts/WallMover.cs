@@ -5,37 +5,27 @@ public class WallMover : MonoBehaviour
     [System.Serializable]
     public class WallInfo
     {
-        [Header("Drag the wall mesh here")]
-        public Transform wall;            // wall to move
-        [Header("How far, in metres, to move inward")]
-        public float moveDistance = 0.5f; // slide amount
-        [Header("Direction pointing INTO the room (local world space)")]
-        public Vector3 inwardDir = Vector3.forward;
-
-        // cached at runtime
+        public Transform wall;            // drag wall here
+        public float moveDistance = 0.5f; // metres toward centre
+        public Vector3 inwardDir = Vector3.forward; // into room
         [HideInInspector] public Vector3 startPos;
         [HideInInspector] public Vector3 targetPos;
     }
 
-    [Header("Walls to move")]
     public WallInfo[] walls;
+    public float delayBeforeStart = 0f;   // set to 0 while testing
+    public float moveDuration     = 5f;   // short so you can see it
 
-    [Header("Timing")]
-    public float delayBeforeStart = 10f; // seconds to wait
-    public float moveDuration     = 90f; // seconds to finish slide
-
-    float t;            // 0-1 lerp factor
-    bool moving = false;
+    float t;
+    bool moving;
 
     void Start()
     {
-        // cache start & target positions
         foreach (var w in walls)
         {
             if (w.wall == null) continue;
             w.startPos  = w.wall.localPosition;
-            w.targetPos = w.startPos + w.inwardDir.normalized * w.moveDistance * -1f;
-            // multiply by -1 because inwardDir should point INTO the room
+            w.targetPos = w.startPos + w.inwardDir.normalized * w.moveDistance;
         }
         Invoke(nameof(BeginMove), delayBeforeStart);
     }
@@ -47,14 +37,11 @@ public class WallMover : MonoBehaviour
         if (!moving) return;
 
         t += Time.deltaTime / moveDuration;
-        float k = Mathf.SmoothStep(0f, 1f, t);           // easing curve
+        float k = Mathf.SmoothStep(0f, 1f, t);
 
         foreach (var w in walls)
             if (w.wall) w.wall.localPosition = Vector3.Lerp(w.startPos, w.targetPos, k);
 
-        if (t >= 1f) moving = false; // finished
+        if (t >= 1f) moving = false;
     }
-
-    // Call this from another script (e.g., your timer) if you want to start early
-    public void TriggerEarly() { if (!moving) BeginMove(); }
 }

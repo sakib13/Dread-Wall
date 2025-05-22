@@ -3021,7 +3021,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4198195060786464, guid: 41849f19442adff4a951d0ff9430516c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.15
+      value: 3.38
       objectReference: {fileID: 0}
     - target: {fileID: 4198195060786464, guid: 41849f19442adff4a951d0ff9430516c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -12825,21 +12825,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walls:
   - wall: {fileID: 195933217}
-    moveDistance: 0.5
+    moveDistance: 5
     inwardDir: {x: 1, y: 0, z: 0}
     startPos: {x: 0, y: 0, z: 0}
     targetPos: {x: 0, y: 0, z: 0}
   - wall: {fileID: 458088002}
-    moveDistance: 0.5
+    moveDistance: 5
     inwardDir: {x: 0, y: 0, z: 1}
     startPos: {x: 0, y: 0, z: 0}
     targetPos: {x: 0, y: 0, z: 0}
   - wall: {fileID: 1815777898}
-    moveDistance: 0.5
+    moveDistance: 5
     inwardDir: {x: -1, y: 0, z: 0}
     startPos: {x: 0, y: 0, z: 0}
     targetPos: {x: 0, y: 0, z: 0}
-  delayBeforeStart: 5
+  delayBeforeStart: 0
   moveDuration: 90
 --- !u!1 &874446682
 GameObject:
@@ -28547,7 +28547,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4198195060786464, guid: 41849f19442adff4a951d0ff9430516c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.15
+      value: 3.45
       objectReference: {fileID: 0}
     - target: {fileID: 4198195060786464, guid: 41849f19442adff4a951d0ff9430516c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -32430,7 +32430,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4198195060786464, guid: 41849f19442adff4a951d0ff9430516c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.8
+      value: -3.57
       objectReference: {fileID: 0}
     - target: {fileID: 4198195060786464, guid: 41849f19442adff4a951d0ff9430516c, type: 3}
       propertyPath: m_LocalRotation.w
