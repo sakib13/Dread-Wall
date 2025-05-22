@@ -12835,7 +12835,7 @@ MonoBehaviour:
     targetPos: {x: 0, y: 0, z: 0}
   - wall: {fileID: 458088002}
     moveDistance: 5
-    inwardDir: {x: 0, y: 0, z: 1}
+    inwardDir: {x: 0, y: 0, z: -1}
     startPos: {x: 0, y: 0, z: 0}
     targetPos: {x: 0, y: 0, z: 0}
   - wall: {fileID: 1815777898}
