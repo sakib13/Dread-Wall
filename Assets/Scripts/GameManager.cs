@@ -23,6 +23,10 @@ namespace Scripts
         [SerializeField] Vector3 cubeSpawnPosition =  new Vector3(0, 1, 1);
         [SerializeField] Vector3 planeSpawnPosition = new Vector3(-1, 0, 0);
 
+        [Header("UI")]
+        [SerializeField] GameObject canvas;
+
+
         private int currentStage = 0;
         private PlayerRef[] players;
 
@@ -31,21 +35,21 @@ namespace Scripts
             if (Object.HasStateAuthority)
             {
                 players = Runner.ActivePlayers.ToArray();
-                StartCoroutine(InitialSpawn());
+                //StartCoroutine(InitialSpawn());
             }
         }
 
         IEnumerator InitialSpawn()
         {
-            // 初始等待5秒
+            // Initial wait 5 seconds
             yield return new WaitForSeconds(5f);
 
-            // 第一阶段：为玩家1生成红方块和红平台
+            // Phase 1: Generate red squares and red platforms for player 1
             SpawnForPlayer(players[0], redCube, redPlane);
             currentStage = 1;
         }
 
-        // 由平台触发器调用的RPC方法
+        // RPC methods called by platform triggers
         [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
         public void RPC_OnPuzzleSolved(int stage)
         {
@@ -53,12 +57,12 @@ namespace Scripts
 
             switch (currentStage)
             {
-                case 1: // 红谜题完成
+                case 1: // Red puzzle complete
                     SpawnForPlayer(players[1], blueCube, bluePlane);
                     Debug.Log("Spawning Cubes");
                     currentStage = 2;
                     break;
-                case 2: // 蓝谜题完成
+                case 2: // Blue puzzle complete
                     SpawnForPlayer(players[0], greenCube, greenPlane);
                     currentStage = 3;
                     break;
@@ -70,14 +74,14 @@ namespace Scripts
 
         void SpawnForPlayer(PlayerRef player, NetworkObject cubePrefab, NetworkObject planePrefab)
         {
-            // 获取玩家视角前方位置
+            // Get the position in front of the player's viewpoint
             if (Runner.TryGetPlayerObject(player, out var playerObj))
             {
                 Vector3 spawnPos = playerObj.transform.position +
                                    playerObj.transform.forward * spawnDistance +
                                    Vector3.up * spawnHeight;
 
-                // 生成立方体
+                // Generate Cube
                 NetworkObject cube = Runner.Spawn(
                     cubePrefab,
                     spawnPos,
@@ -85,7 +89,7 @@ namespace Scripts
                     player
                 );
 
-                // 生成平台（直接放在玩家面前地面）
+                // Spawn platforms (placed on the ground directly in front of the player)
                 Runner.Spawn(
                     planePrefab,
                     spawnPos - Vector3.up * spawnHeight,
@@ -93,7 +97,7 @@ namespace Scripts
                     player
                 );
             }
-            else
+            else // Spawn it normally
             {
                 NetworkObject cube = Runner.Spawn(
                 cubePrefab,
@@ -113,7 +117,9 @@ namespace Scripts
 
         public void StartUI()
         {
-            Debug.Log("MQTT: ");
+            StartCoroutine(InitialSpawn());
+            Debug.Log("----------------------GameStart------------------------");
+            canvas.SetActive(false);
         }
     }
 }
