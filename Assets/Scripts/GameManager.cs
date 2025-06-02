@@ -3,6 +3,7 @@ using Fusion;
 using System.Collections;
 using System.Linq;
 using TMPro;
+using UnityEngine.UI;
 
 namespace Scripts
 {
@@ -26,13 +27,14 @@ namespace Scripts
         [SerializeField] float despawnDelay = 2.0f;
 
         [Header("UI")]
-        [SerializeField] GameObject canvas;
+        [SerializeField] GameObject gameStartCanvas;
         [SerializeField] TextMeshProUGUI timerText;
         [SerializeField] GameObject winPanel;
         [SerializeField] GameObject losePanel;
+        //[SerializeField] private Button startButton;
 
         [Header("Game Settings")]
-        [SerializeField] float gameDuration = 30f; // Total length of game (seconds)
+        [SerializeField] float gameDuration = 300f; // Total length of game (seconds)
 
         [Networked] private TickTimer gameTimer {  get; set; }
         [Networked] private int currentStage { get; set; } = 0;
@@ -45,15 +47,22 @@ namespace Scripts
         private NetworkObject[] activePlanes = new NetworkObject[2];
 
         private bool gameEnded = false;
+        public bool IsMenuVisible { get; set; } = true;
 
         public override void Spawned()
         {
             if (Object.HasStateAuthority)
             {
                 players = Runner.ActivePlayers.ToArray();
+                IsMenuVisible = true;
                 //StartCoroutine(InitialSpawn());
             }
 
+            else
+            {
+                players = Runner.ActivePlayers.ToArray();
+                gameStartCanvas.SetActive(IsMenuVisible);
+            }
             // Reset the UI state
             winPanel.SetActive(false);
             losePanel.SetActive(false);
@@ -267,6 +276,20 @@ namespace Scripts
             }
         }
 
+        [Rpc(RpcSources.All, RpcTargets.All)]
+        public void RPC_HideMenu()
+        {
+            // Ensure that only the host actually modifies the network state
+            if (Object.HasStateAuthority)
+            {
+                IsMenuVisible = false;
+                gameStartCanvas.SetActive(IsMenuVisible);
+            }
+        }
+
+
+
+
         public void StartGame()
         {
             // Initialize the timer
@@ -275,10 +298,15 @@ namespace Scripts
 
             StartCoroutine(InitialSpawn());
             Debug.Log("----------------------GameStart------------------------");
-            canvas.SetActive(false);
+            //gameStartCanvas.SetActive(false);
 
             // Reset timer color
             timerText.color = Color.white;
+
+            if (Object.HasStateAuthority)
+            {
+                players = Runner.ActivePlayers.ToArray();
+            }
         }
     }
 }
