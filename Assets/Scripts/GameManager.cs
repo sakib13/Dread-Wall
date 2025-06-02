@@ -48,6 +48,7 @@ namespace Scripts
 
         private bool gameEnded = false;
         public bool IsMenuVisible { get; set; } = true;
+        private bool isSinglePlayer = false;
 
         public override void Spawned()
         {
@@ -55,7 +56,7 @@ namespace Scripts
             {
                 players = Runner.ActivePlayers.ToArray();
                 IsMenuVisible = true;
-                //StartCoroutine(InitialSpawn());
+                isSinglePlayer = players.Length == 1;
             }
 
             else
@@ -75,7 +76,7 @@ namespace Scripts
             yield return new WaitForSeconds(5f);
 
             // Phase 1: Generate red squares and red platforms for player 1
-            yield return SpawnForPlayer(players[0], redCube, redPlane, 0);
+            yield return SpawnForPlayer(0, redCube, redPlane);
             currentStage = 1;
         }
 
@@ -99,17 +100,21 @@ namespace Scripts
             switch (currentStage)
             {
                 case 1: // Red puzzle complete
-                    yield return SpawnForPlayer(players[1], blueCube, bluePlane, 1);
-                    Debug.Log("Spawning BlueCubes for player2");
+                    // Single-player mode: generate blue puzzles for the same player
+                    // Multiplayer mode: generates blue puzzles for player 2
+                    int nextPlayerIndex = isSinglePlayer ? 0 : 1;
+                    yield return SpawnForPlayer(nextPlayerIndex, blueCube, bluePlane);
+                    Debug.Log($"-----------for the player {(isSinglePlayer ? "1" : "2")} generate blue puzzle-----------");
                     currentStage = 2;
                     break;
                 case 2: // Blue puzzle complete
-                    yield return SpawnForPlayer(players[0], greenCube, greenPlane, 0);
-                    Debug.Log("Spawning GreenCubes for player1");
+                    // Generate green puzzles for player 1 (single/multiplayer both player 1)
+                    yield return SpawnForPlayer(0, greenCube, greenPlane);
+                    Debug.Log("--------Spawning GreenCubes for player1----------");
                     currentStage = 3;
                     break;
                 case 3: //
-                    Debug.Log("All Puzzle Solved!");
+                    Debug.Log("---------All Puzzle Solved!------------");
                     EndGame(true); // Winning the game
                     break;
             }
@@ -121,7 +126,7 @@ namespace Scripts
             int playerIndex = currentStage switch
             {
                 1 => 0, // Red puzzles belong to player 0
-                2 => 1, // Blue puzzles belong to player 1
+                2 => isSinglePlayer ? 0 : 1, // Blue puzzles: single player mode player 0, multiplayer mode player 1
                 _ => -1
             };
 
@@ -147,8 +152,17 @@ namespace Scripts
         }
 
 
-        IEnumerator SpawnForPlayer(PlayerRef player, NetworkObject cubePrefab, NetworkObject planePrefab, int playerIndex)
+        IEnumerator SpawnForPlayer(int playerIndex, NetworkObject cubePrefab, NetworkObject planePrefab)
         {
+            // Ensure that the player index is valid
+            if (playerIndex >= players.Length)
+            {
+                Debug.LogError($"----------Invalid player index: {playerIndex}, total number of players: {players.Length}------------");
+                yield break;
+            }
+
+            PlayerRef player = players[playerIndex];
+
             // Get the position in front of the player's viewpoint
             if (Runner.TryGetPlayerObject(player, out var playerObj))
             {
