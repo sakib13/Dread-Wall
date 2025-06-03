@@ -24,7 +24,12 @@ namespace Scripts
         [SerializeField] float spawnHeight = 1f;
         [SerializeField] Vector3 cubeSpawnPosition =  new Vector3(0, 1, 1);
         [SerializeField] Vector3 planeSpawnPosition = new Vector3(-1, 0, 0);
-        [SerializeField] float despawnDelay = 2.0f;
+        [SerializeField] float despawnDelay = 1.5f; // Destruction delay time
+
+        [Header("3D Audio Settings")]
+        [SerializeField] AudioClip cubeSpawnSound;
+        [SerializeField] AudioClip puzzleSolvedSound;
+        [SerializeField] GameObject soundEmitterPrefab; // Emitter prefabs for 3D sound effects
 
         [Header("UI")]
         [SerializeField] GameObject gameStartCanvas;
@@ -68,6 +73,12 @@ namespace Scripts
             winPanel.SetActive(false);
             losePanel.SetActive(false);
             timerText.gameObject.SetActive(true);
+
+            // Ensure the availability of sound pre-fabricated parts
+            if (soundEmitterPrefab == null)
+            {
+                Debug.LogWarning("---------Sound emitter prefab is not assigned in GameManager!-----------");
+            }
         }
 
         // Add render loop to handle change detection
@@ -135,10 +146,18 @@ namespace Scripts
                     // Generate green puzzles for player 1 (single/multiplayer both player 1)
                     yield return SpawnForPlayer(0, greenCube, greenPlane);
                     Debug.Log("--------Spawning GreenCubes for player1----------");
+
+                    // Play the puzzle solving sound effect
+                    PlaySound(puzzleSolvedSound, Vector3.zero);
+
                     currentStage = 3;
                     break;
                 case 3: //
                     Debug.Log("---------All Puzzle Solved!------------");
+
+                    // Play the final puzzle solution sound
+                    PlaySound(puzzleSolvedSound, Vector3.zero);
+
                     EndGame(true); // Winning the game
                     break;
             }
@@ -147,6 +166,8 @@ namespace Scripts
         // Destroy the current puzzle
         IEnumerator DespawnCurrentPuzzle()
         {
+            //Vector3 puzzlePosition = activePlanes[playerIndex].transform.position;
+
             int playerIndex = currentStage switch
             {
                 1 => 0, // Red puzzles belong to player 0
@@ -186,49 +207,70 @@ namespace Scripts
             }
 
             PlayerRef player = players[playerIndex];
+            Vector3 spawnPos = Vector3.zero;
+            Vector3 planePos = Vector3.zero;
 
             // Get the position in front of the player's viewpoint
             if (Runner.TryGetPlayerObject(player, out var playerObj))
             {
-                Vector3 spawnPos = playerObj.transform.position +
+                spawnPos = playerObj.transform.position +
                                    playerObj.transform.forward * spawnDistance +
                                    Vector3.up * spawnHeight;
 
-                // Generate Cube
-                activeCubes[playerIndex] = Runner.Spawn(
-                    cubePrefab,
-                    spawnPos,
-                    Quaternion.identity,
-                    player
-                );
-
-                // Spawn platforms (placed on the ground directly in front of the player)
-                activePlanes[playerIndex] = Runner.Spawn(
-                    planePrefab,
-                    spawnPos - Vector3.up * spawnHeight + new Vector3(0, 1, 0),
-                    Quaternion.identity,
-                    player
-                );
+                planePos = spawnPos - Vector3.up * spawnHeight + new Vector3(0, 1, 0); 
             }
             else // normal generation
             {
-                activeCubes[playerIndex] = Runner.Spawn(
-                    cubePrefab,
-                    cubeSpawnPosition,
-                    Quaternion.identity,
-                    player
-                );
-
-                activePlanes[playerIndex] = Runner.Spawn(
-                    planePrefab,
-                    planeSpawnPosition,
-                    Quaternion.identity,
-                    player
-                );
+                spawnPos = cubeSpawnPosition;
+                planePos = planeSpawnPosition;
             }
+
+            // Generate Cube
+            activeCubes[playerIndex] = Runner.Spawn(
+                cubePrefab,
+                spawnPos,
+                Quaternion.identity,
+                player
+            );
+
+            // Spawn platforms (placed on the ground directly in front of the player)
+            activePlanes[playerIndex] = Runner.Spawn(
+                planePrefab,
+                planePos,
+                Quaternion.identity,
+                player
+            );
+
+            // Play the cube spawning sound (at the spawning position)£©
+            PlaySound(cubeSpawnSound, spawnPos);
 
             yield return null;
         }
+
+        // Local method to play 3D sound (without RPC)
+        private void PlaySound(AudioClip clip, Vector3 position)
+        {
+            if (clip == null || soundEmitterPrefab == null) return;
+
+            // Create a sound emitter at the specified location
+            GameObject soundEmitter = Instantiate(soundEmitterPrefab, position, Quaternion.identity);
+            AudioSource audioSource = soundEmitter.GetComponent<AudioSource>();
+
+            if (audioSource != null)
+            {
+                audioSource.clip = clip;
+                audioSource.spatialBlend = 1.0f; // Set to 3D sound
+                audioSource.Play();
+
+                // Destroy the transmitter when the sound effect has finished playing
+                Destroy(soundEmitter, clip.length + 0.1f);
+            }
+            else
+            {
+                Destroy(soundEmitter);
+            }
+        }
+
 
         public override void FixedUpdateNetwork()
         {
