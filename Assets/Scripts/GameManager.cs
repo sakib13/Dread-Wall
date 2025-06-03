@@ -22,7 +22,7 @@ namespace Scripts
         [Header("Spawn Settings")]
         [SerializeField] float spawnDistance = 0.5f;
         [SerializeField] float spawnHeight = 1f;
-        [SerializeField] Vector3 cubeSpawnPosition =  new Vector3(0, 1, 1);
+        [SerializeField] Vector3 cubeSpawnPosition = new Vector3(0, 1, 1);
         [SerializeField] Vector3 planeSpawnPosition = new Vector3(-1, 0, 0);
         [SerializeField] float despawnDelay = 2.0f;
 
@@ -36,7 +36,7 @@ namespace Scripts
         [Header("Game Settings")]
         [SerializeField] float gameDuration = 300f; // Total length of game (seconds)
 
-        [Networked] private TickTimer gameTimer {  get; set; }
+        [Networked] private TickTimer gameTimer { get; set; }
         [Networked] private int currentStage { get; set; } = 0;
 
 
@@ -49,6 +49,10 @@ namespace Scripts
         private bool gameEnded = false;
         public bool IsMenuVisible { get; set; } = true;
         private bool isSinglePlayer = false;
+
+        public WallMover wallMover; // Reference to the WallMover script-Sakib
+        public DestroyObject destroyableWall; // Reference to destroy walls-Sakib
+
 
         public override void Spawned()
         {
@@ -322,5 +326,14 @@ namespace Scripts
                 players = Runner.ActivePlayers.ToArray();
             }
         }
+        //Sakib's code
+        public void OnPuzzleComplete()
+        {
+            if (destroyableWall != null)
+            {
+                destroyableWall.DestroySelf();
+            }
+        }
+        
     }
 }
