@@ -1680,7 +1680,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 1152369774
   ObjectInterest: 1
-  Flags: 262145
+  Flags: 786433
   NestedObjects: []
   NetworkedBehaviours: []
   ForceRemoteRenderTimeframe: 0
@@ -11809,7 +11809,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 1724123260
   ObjectInterest: 1
-  Flags: 262145
+  Flags: 786433
   NestedObjects: []
   NetworkedBehaviours: []
   ForceRemoteRenderTimeframe: 0
@@ -16983,7 +16983,8 @@ MonoBehaviour:
   timerText: {fileID: 829548194}
   winPanel: {fileID: 1000313168}
   losePanel: {fileID: 386191372}
-  gameDuration: 300
+  _IsMenuVisible: 1
+  gameDuration: 150
 --- !u!114 &1132489523
 MonoBehaviour:
   m_ObjectHideFlags: 0
