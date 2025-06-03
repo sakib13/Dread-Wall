@@ -1557,6 +1557,7 @@ GameObject:
   - component: {fileID: 83909354}
   - component: {fileID: 83909353}
   - component: {fileID: 83909357}
+  - component: {fileID: 83909358}
   m_Layer: 5
   m_Name: GameStartCanvas
   m_TagString: Untagged
@@ -1665,6 +1666,24 @@ MonoBehaviour:
   _addNewPointsToFront: 0
   _forwardElement: {fileID: 0}
   _canvas: {fileID: 83909355}
+--- !u!114 &83909358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 83909352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 1152369774
+  ObjectInterest: 1
+  Flags: 786433
+  NestedObjects: []
+  NetworkedBehaviours: []
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &85530107
 GameObject:
   m_ObjectHideFlags: 0
@@ -11666,6 +11685,7 @@ GameObject:
   - component: {fileID: 795144024}
   - component: {fileID: 795144023}
   - component: {fileID: 795144022}
+  - component: {fileID: 795144027}
   m_Layer: 5
   m_Name: GameEndCanvas
   m_TagString: Untagged
@@ -11775,6 +11795,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 4.43}
   m_SizeDelta: {x: 482, y: 482}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &795144027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795144021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 1724123260
+  ObjectInterest: 1
+  Flags: 786433
+  NestedObjects: []
+  NetworkedBehaviours: []
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &799093905
 GameObject:
   m_ObjectHideFlags: 0
@@ -16941,11 +16979,15 @@ MonoBehaviour:
   cubeSpawnPosition: {x: 0, y: 1, z: 0.5}
   planeSpawnPosition: {x: -0.6, y: 0.3, z: 0}
   despawnDelay: 1.5
+  cubeSpawnSound: {fileID: 8300000, guid: 152aafa4bc75a894f80f0da543555c4b, type: 3}
+  puzzleSolvedSound: {fileID: 8300000, guid: 5d537aa5c81ccb44ba40aa06a0327255, type: 3}
+  soundEmitterPrefab: {fileID: 650939207300702567, guid: 274b9b2b8a9e28840967fc2a699dad2c, type: 3}
   gameStartCanvas: {fileID: 83909352}
   timerText: {fileID: 829548194}
   winPanel: {fileID: 1000313168}
   losePanel: {fileID: 386191372}
-  gameDuration: 300
+  _IsMenuVisible: 1
+  gameDuration: 180
 --- !u!114 &1132489523
 MonoBehaviour:
   m_ObjectHideFlags: 0
