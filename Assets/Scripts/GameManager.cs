@@ -31,7 +31,7 @@ namespace Scripts
         [SerializeField] TextMeshProUGUI timerText;
         [SerializeField] GameObject winPanel;
         [SerializeField] GameObject losePanel;
-        //[SerializeField] private Button startButton;
+        [Networked] public bool IsMenuVisible { get; set; } = true; // Maintain network synchronisation properties
 
         [Header("Game Settings")]
         [SerializeField] float gameDuration = 300f; // Total length of game (seconds)
@@ -39,7 +39,8 @@ namespace Scripts
         [Networked] private TickTimer gameTimer {  get; set; }
         [Networked] private int currentStage { get; set; } = 0;
 
-
+        private ChangeDetector _changeDetector;// Change Detector for Fusion 2
+        
         private PlayerRef[] players;
 
         // Store currently active squares and platforms
@@ -47,27 +48,50 @@ namespace Scripts
         private NetworkObject[] activePlanes = new NetworkObject[2];
 
         private bool gameEnded = false;
-        public bool IsMenuVisible { get; set; } = true;
         private bool isSinglePlayer = false;
 
         public override void Spawned()
         {
+            _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
+
             if (Object.HasStateAuthority)
             {
                 players = Runner.ActivePlayers.ToArray();
-                IsMenuVisible = true;
+                IsMenuVisible = true;   // Host sets initial state
                 isSinglePlayer = players.Length == 1;
             }
 
-            else
-            {
-                players = Runner.ActivePlayers.ToArray();
-                gameStartCanvas.SetActive(IsMenuVisible);
-            }
+            // Initial UI state for all clients
+            UpdateMenuVisibility();
+  
             // Reset the UI state
             winPanel.SetActive(false);
             losePanel.SetActive(false);
             timerText.gameObject.SetActive(true);
+        }
+
+        // Add render loop to handle change detection
+        public override void Render()
+        {
+            base.Render();
+
+            // Detect network state changes with ChangeDetector
+            foreach (var change in _changeDetector.DetectChanges(this))
+            {
+                switch (change)
+                {
+                    case nameof(IsMenuVisible):
+                        UpdateMenuVisibility();
+                        break;
+                        // You can add other properties that need to be detected
+                }
+            }
+        }
+
+        // Ways to update menu visibility
+        private void UpdateMenuVisibility()
+        {
+            gameStartCanvas.SetActive(IsMenuVisible);
         }
 
         IEnumerator InitialSpawn()
@@ -293,19 +317,29 @@ namespace Scripts
         [Rpc(RpcSources.All, RpcTargets.All)]
         public void RPC_HideMenu()
         {
+            // Immediate local hidden menu for all clients (provides instant feedback)
+            gameStartCanvas.SetActive(IsMenuVisible);
+
             // Ensure that only the host actually modifies the network state
             if (Object.HasStateAuthority)
             {
                 IsMenuVisible = false;
-                gameStartCanvas.SetActive(IsMenuVisible);
             }
+
         }
-
-
 
 
         public void StartGame()
         {
+            // Local hidden menus for all clients
+            gameStartCanvas.SetActive(false);
+
+            // Host sets network state
+            if (Object.HasStateAuthority)
+            {
+                IsMenuVisible = false;
+            }
+
             // Initialize the timer
             gameTimer = TickTimer.CreateFromSeconds(Runner, gameDuration);
             gameEnded = false;
@@ -321,6 +355,7 @@ namespace Scripts
             {
                 players = Runner.ActivePlayers.ToArray();
             }
+
         }
     }
 }
