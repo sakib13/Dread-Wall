@@ -321,6 +321,7 @@ namespace Scripts
         {
             if (gameEnded) return;
 
+            destroyableWall.DestroySelf();  // Destroy the final door when all puzzles solved in time
             gameEnded = true;
             gameTimer = TickTimer.None;
 
@@ -404,13 +405,13 @@ namespace Scripts
 
         }
         //Sakib's code
-        public void OnPuzzleComplete()
-        {
-            if (destroyableWall != null)
-            {
-                destroyableWall.DestroySelf();
-            }
-        }
+        //public void OnPuzzleComplete()
+        //{
+        //    if (destroyableWall != null)
+        //    {
+        //        destroyableWall.DestroySelf();
+        //    }
+        //}
         
     }
 }
