@@ -310,7 +310,7 @@ namespace Scripts
             if (gameTimer.Expired(Runner))
             {
                 // Check if the game is finished
-                if (currentStage < 3)
+                if (currentStage <= 3)
                 {
                     EndGame(false); // Game Failure
                 }
