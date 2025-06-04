@@ -1678,7 +1678,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 3660444915
+  SortKey: 267716711
   ObjectInterest: 1
   Flags: 786433
   NestedObjects: []
@@ -11930,7 +11930,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 4232198401
+  SortKey: 839470197
   ObjectInterest: 1
   Flags: 786433
   NestedObjects: []
@@ -17094,7 +17094,7 @@ MonoBehaviour:
   redCube: {fileID: 827170919089709158, guid: 635a3ad7e3d7525488e31e7ea89c0010, type: 3}
   blueCube: {fileID: 827170919089709158, guid: e3615c0a9aa229641a30a70c50b17521, type: 3}
   greenCube: {fileID: 827170919089709158, guid: 8c51a959a2f2067418c6d4f28e1ce48f, type: 3}
-  redPlane: {fileID: -2204542818044488539, guid: 8b82441d05d3a424cb8892b860ce97f9, type: 3}
+  redPlane: {fileID: -6597616751175803137, guid: 8b82441d05d3a424cb8892b860ce97f9, type: 3}
   bluePlane: {fileID: -2204542818044488539, guid: c5aa1e4a3e3feaf46b961cecac56c673, type: 3}
   greenPlane: {fileID: -2204542818044488539, guid: ffcbad14769e29d46ae664e3f2abe98c, type: 3}
   spawnDistance: 0.5
@@ -17105,6 +17105,11 @@ MonoBehaviour:
   cubeSpawnSound: {fileID: 8300000, guid: 152aafa4bc75a894f80f0da543555c4b, type: 3}
   puzzleSolvedSound: {fileID: 8300000, guid: 5d537aa5c81ccb44ba40aa06a0327255, type: 3}
   soundEmitterPrefab: {fileID: 650939207300702567, guid: 274b9b2b8a9e28840967fc2a699dad2c, type: 3}
+  introAudio: {fileID: 8300000, guid: 45f49563a7ca1794d9656826974c08c3, type: 3}
+  urgencyPushAudio: {fileID: 8300000, guid: 89c9eb125c9d695489f721b7aa9f2b3f, type: 3}
+  winAudio: {fileID: 8300000, guid: 180bdc16226f8aa45be337db17c146a6, type: 3}
+  failAudio: {fileID: 8300000, guid: 8aebb332dbceeff4ab7bf8eb7f09adb1, type: 3}
+  voiceVolume: 0.8
   gameStartCanvas: {fileID: 83909352}
   timerText: {fileID: 829548194}
   winPanel: {fileID: 1000313168}
@@ -17125,7 +17130,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 3201520669
+  SortKey: 4103759761
   ObjectInterest: 1
   Flags: 786433
   NestedObjects: []

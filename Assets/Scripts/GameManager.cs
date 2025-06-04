@@ -31,6 +31,13 @@ namespace Scripts
         [SerializeField] AudioClip puzzleSolvedSound;
         [SerializeField] GameObject soundEmitterPrefab; // Emitter prefabs for 3D sound effects
 
+        [Header("Voice Audio Settings")]
+        [SerializeField] AudioClip introAudio;       // Introductory voice at the start of the game
+        [SerializeField] AudioClip urgencyPushAudio; // Urgent voice reminders when time is half over
+        [SerializeField] AudioClip winAudio;         // Game Winning Voice
+        [SerializeField] AudioClip failAudio;        // Game Failure Voice
+        [SerializeField] float voiceVolume = 0.8f;   // Voice volume
+
         [Header("UI")]
         [SerializeField] GameObject gameStartCanvas;
         [SerializeField] TextMeshProUGUI timerText;
@@ -54,6 +61,7 @@ namespace Scripts
 
         private bool gameEnded = false;
         private bool isSinglePlayer = false;
+        private bool hasPlayedUrgencyAudio = false; // Mark if an emergency voice has been played
 
         public WallMover wallMover; // Reference to the WallMover script-Sakib
         public DestroyObject destroyableWall; // Reference to destroy walls-Sakib
@@ -158,6 +166,7 @@ namespace Scripts
                     break;
                 case 3: //
                     Debug.Log("---------All Puzzle Solved!------------");
+                    currentStage = 4;
 
                     // Play the final puzzle solution sound
                     PlaySound(puzzleSolvedSound, Vector3.zero);
@@ -275,6 +284,23 @@ namespace Scripts
             }
         }
 
+        // Play voice (2D global sound)
+        private void PlayVoice(AudioClip clip)
+        {
+            if (clip == null) return;
+
+            // Create a temporary game object to play the voice
+            GameObject voicePlayer = new GameObject("VoicePlayer");
+            AudioSource audioSource = voicePlayer.AddComponent<AudioSource>();
+
+            audioSource.clip = clip;
+            audioSource.volume = voiceVolume;
+            audioSource.spatialBlend = 0f; // Set to 2D sound (global)
+            audioSource.Play();
+
+            // Destroy the object when voice playback is complete
+            Destroy(voicePlayer, clip.length + 0.1f);
+        }
 
         public override void FixedUpdateNetwork()
         {
@@ -314,6 +340,13 @@ namespace Scripts
             {
                 timerText.color = Color.red;
             }
+
+            // Check if the emergency voice needs to be played (half way through the time)£©
+            if (!hasPlayedUrgencyAudio && remainingTime <= gameDuration / 2f)
+            {
+                PlayVoice(urgencyPushAudio);
+                hasPlayedUrgencyAudio = true;
+            }
         }
 
         // Game Over
@@ -326,6 +359,16 @@ namespace Scripts
             gameTimer = TickTimer.None;
 
             RPC_ShowGameResult(isWin);
+
+            // Play victory or defeat voice
+            if (isWin)
+            {
+                PlayVoice(winAudio);
+            }
+            else
+            {
+                PlayVoice(failAudio);
+            }
 
             // Stop all puzzle generation
             StopAllCoroutines();
@@ -391,6 +434,9 @@ namespace Scripts
             gameTimer = TickTimer.CreateFromSeconds(Runner, gameDuration);
             gameEnded = false;
 
+            // Play the game's introductory voice
+            PlayVoice(introAudio);
+
             StartCoroutine(InitialSpawn());
             Debug.Log("----------------------GameStart------------------------");
             //gameStartCanvas.SetActive(false);
@@ -402,7 +448,6 @@ namespace Scripts
             {
                 players = Runner.ActivePlayers.ToArray();
             }
-
         }
         //Sakib's code
         //public void OnPuzzleComplete()
