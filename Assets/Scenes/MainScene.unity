@@ -13097,7 +13097,7 @@ MonoBehaviour:
     startPos: {x: 0, y: 0, z: 0}
     targetPos: {x: 0, y: 0, z: 0}
   delayBeforeStart: 0
-  moveDuration: 90
+  moveDuration: 240
 --- !u!1 &872539781
 GameObject:
   m_ObjectHideFlags: 0

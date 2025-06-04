@@ -7,7 +7,7 @@ public class WallMover : MonoBehaviour
     public class WallInfo
     {
         public Transform wall;            // drag wall here
-        public float moveDistance = 0.5f; // metres toward centre
+        public float moveDistance = 0.1f; // metres toward centre
         public Vector3 inwardDir = Vector3.forward; // into room
         [HideInInspector] public Vector3 startPos;
         [HideInInspector] public Vector3 targetPos;
