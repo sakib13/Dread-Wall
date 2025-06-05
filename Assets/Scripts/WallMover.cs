@@ -21,7 +21,6 @@ public class WallMover : MonoBehaviour
     public float moveDuration = 5f;   // short so you can see it
 
     float t;
-    bool moving;
     public bool moving;
 
 
