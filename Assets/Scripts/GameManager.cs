@@ -40,9 +40,9 @@ namespace Scripts
 
         [Header("UI")]
         [SerializeField] GameObject gameStartCanvas;
-        [SerializeField] TextMeshProUGUI timerText;
-        [SerializeField] GameObject winPanel;
-        [SerializeField] GameObject losePanel;
+        [SerializeField] TextMeshProUGUI[] timerTexts = new TextMeshProUGUI[4]; // Four timers
+        [SerializeField] GameObject[] winPanels = new GameObject[4]; // Four victory panels
+        [SerializeField] GameObject[] losePanels = new GameObject[4]; // Four Failure Panels
         [Networked] public bool IsMenuVisible { get; set; } = true; // Maintain network synchronisation properties
 
         [Header("Game Settings")]
@@ -80,11 +80,10 @@ namespace Scripts
 
             // Initial UI state for all clients
             UpdateMenuVisibility();
-  
-            // Reset the UI state
-            winPanel.SetActive(false);
-            losePanel.SetActive(false);
-            timerText.gameObject.SetActive(true);
+
+            // Reset all UI states
+            SetAllUIElementsActive(false);
+            SetAllTimersActive(false);
 
             // Ensure the availability of sound pre-fabricated parts
             if (soundEmitterPrefab == null)
@@ -92,6 +91,29 @@ namespace Scripts
                 Debug.LogWarning("---------Sound emitter prefab is not assigned in GameManager!-----------");
             }
         }
+
+        // Set the activation status of all UI elements (victory/defeat panels)
+        private void SetAllUIElementsActive(bool active)
+        {
+            foreach (var panel in winPanels)
+            {
+                if (panel != null) panel.SetActive(active);
+            }
+            foreach (var panel in losePanels)
+            {
+                if (panel != null) panel.SetActive(active);
+            }
+        }
+
+        // Set the active state of all timers
+        private void SetAllTimersActive(bool active)
+        {
+            foreach (var timer in timerTexts)
+            {
+                if (timer != null) timer.gameObject.SetActive(active);
+            }
+        }
+
 
         // Add render loop to handle change detection
         public override void Render()
@@ -333,12 +355,25 @@ namespace Scripts
             float remainingTime = gameTimer.RemainingTime(Runner) ?? 0;
             int minutes = Mathf.FloorToInt(remainingTime / 60);
             int seconds = Mathf.FloorToInt(remainingTime % 60);
-            timerText.text = $"{minutes:00}:{seconds:00}";
+            string timeText = $"{minutes:00}:{seconds:00}";
 
-            // Turns red when the remaining time is less than 10 seconds.
-            if (remainingTime <= 10f)
+            // Update all timers
+            foreach (var timer in timerTexts)
             {
-                timerText.color = Color.red;
+                if (timer != null)
+                {
+                    timer.text = timeText;
+
+                    // Turns red when the remaining time is less than 10 seconds.
+                    if (remainingTime <= 10f)
+                    {
+                        timer.color = Color.red;
+                    }
+                    else
+                    {
+                        timer.color = Color.white;
+                    }
+                }
             }
 
             // Check if the emergency voice needs to be played (half way through the time)£©
@@ -354,16 +389,18 @@ namespace Scripts
         {
             if (gameEnded) return;
 
-            destroyableWall.DestroySelf();  // Destroy the final door when all puzzles solved in time
+            
             gameEnded = true;
             gameTimer = TickTimer.None;
 
             RPC_ShowGameResult(isWin);
 
-            // Play victory or defeat voice
+            // Win performance and fail performance
             if (isWin)
             {
                 PlayVoice(winAudio);
+                destroyableWall.DestroySelf();  // Destroy the final door when all puzzles solved in time
+                wallMover.moving = false;
             }
             else
             {
@@ -390,16 +427,26 @@ namespace Scripts
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
         private void RPC_ShowGameResult(bool isWin)
         {
-            timerText.gameObject.SetActive(false);
+            // Hide all timers
+            SetAllTimersActive(false);
+
+            // Show all win or lose panels
+            SetAllUIElementsActive(false);
 
             if (isWin)
             {
-                winPanel.SetActive(true);
+                foreach (var panel in winPanels)
+                {
+                    if (panel != null) panel.SetActive(true);
+                }
                 Debug.Log("----------------YOU WIN!!!----------------------");
             }
             else
             {
-                losePanel.SetActive(true);
+                foreach (var panel in losePanels)
+                {
+                    if (panel != null) panel.SetActive(true);
+                }
                 Debug.Log("----------------YOU LOSE!!!----------------------");
             }
         }
@@ -407,8 +454,8 @@ namespace Scripts
         [Rpc(RpcSources.All, RpcTargets.All)]
         public void RPC_HideMenu()
         {
-            // Immediate local hidden menu for all clients (provides instant feedback)
-            gameStartCanvas.SetActive(IsMenuVisible);
+            // All clients hide the menu locally immediately
+            if (gameStartCanvas != null) gameStartCanvas.SetActive(false);
 
             // Ensure that only the host actually modifies the network state
             if (Object.HasStateAuthority)
@@ -422,7 +469,7 @@ namespace Scripts
         public void StartGame()
         {
             // Local hidden menus for all clients
-            gameStartCanvas.SetActive(false);
+            if (gameStartCanvas != null) gameStartCanvas.SetActive(false);
 
             // Host sets network state
             if (Object.HasStateAuthority)
@@ -434,6 +481,15 @@ namespace Scripts
             gameTimer = TickTimer.CreateFromSeconds(Runner, gameDuration);
             gameEnded = false;
 
+            // Activate all timers
+            SetAllTimersActive(true);
+
+            // Reset all timer colors
+            foreach (var timer in timerTexts)
+            {
+                if (timer != null) timer.color = Color.white;
+            }
+
             // Play the game's introductory voice
             PlayVoice(introAudio);
 
@@ -441,8 +497,9 @@ namespace Scripts
             Debug.Log("----------------------GameStart------------------------");
             //gameStartCanvas.SetActive(false);
 
-            // Reset timer color
-            timerText.color = Color.white;
+
+            // Start wall moving
+            if (wallMover != null) wallMover.BeginMove();
 
             if (Object.HasStateAuthority)
             {

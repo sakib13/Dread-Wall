@@ -22,6 +22,7 @@ public class WallMover : MonoBehaviour
 
     float t;
     bool moving;
+    public bool moving;
 
 
     void Start()
@@ -33,7 +34,7 @@ public class WallMover : MonoBehaviour
             w.targetPos = w.startPos + w.inwardDir.normalized * w.moveDistance;
 
         }
-        Invoke(nameof(BeginMove), delayBeforeStart);
+        //Invoke(nameof(BeginMove), delayBeforeStart);
 
     
     }
