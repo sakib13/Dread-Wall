@@ -1,14 +1,14 @@
 #include <WiFiS3.h>
 #include <WiFiUdp.h>
 
-const char* ssid = "khoone";
-const char* password = "imansamira2019";
+const char* ssid = "IMAN";
+const char* password = "12345678";
 
 const int port = 4211;
 WiFiUDP udp;
 
 // Broadcast IP for your network — make sure it matches your router's subnet
-IPAddress broadcastIP(192, 168, 0, 255);
+IPAddress broadcastIP(192, 168, 194, 255);
 
 // Define buttons
 const int buttonPins[3] = {2, 3, 4};
