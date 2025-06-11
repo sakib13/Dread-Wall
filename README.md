@@ -42,7 +42,7 @@
 - Photon Fusion: 2.0.6
 - Arduino IDE
 
-### Arduino Installation
+### Arduino Installation ( the The_Ghost_Cube.ino exit Arduino folder )
 
 1. Flash the provided Arduino code (`.ino`) to the Arduino Uno R4 WiFi.
 2. Ensure WiFi credentials and the correct broadcast IP (`192.168.X.255`) are set.
@@ -96,7 +96,7 @@
 - **Threading in Unity:** Cross-thread messaging for UDP required a thread-safe queue to update GameObjects from the main thread.
 - **XR Device Compatibility:** Integrating Meta Quest 3 and XR plugins in Unity while maintaining real-time synchronization.
 - **Multiplayer Sync:** Proper state synchronization across devices was achieved through Photon Fusion.
-- **Real-Time Responsiveness:** Ensuring cube visibility updated instantly for immersive collaboration.
+- **Real-Time Responsiveness:** Ensuring cube visibility is updated instantly for immersive collaboration.
 
 ---
 
