@@ -42,7 +42,7 @@
 - Photon Fusion: 2.0.6
 - Arduino IDE
 
-### Arduino Installation ( the The_Ghost_Cube.ino exit Arduino folder )
+### Arduino Installation ( The_Ghost_Cube.ino exist in Arduino folder )
 
 1. Flash the provided Arduino code (`.ino`) to the Arduino Uno R4 WiFi.
 2. Ensure WiFi credentials and the correct broadcast IP (`192.168.X.255`) are set.
