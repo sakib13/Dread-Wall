@@ -1,3 +1,5 @@
+![Dread-wall Poster](Poster.jpg)
+
 # Dread-wall: XR Digital Twin Escape Room
 
 **Dread-wall** is an innovative XR escape room experience built with Unity 6, Meta Quest 3, Arduino R4 WiFi, and Photon Fusion. The project demonstrates Digital Twin technology by synchronizing real-world physical inputs with a virtual escape room environment.
@@ -62,6 +64,7 @@
 
 ### Arduino Installation
 
+- All Arduino-related source code and schematics are located in the [`Arduino`](./Arduino) folder.
 1. Flash the provided Arduino code (`.ino`) to the Arduino Uno R4 WiFi.
 2. Ensure WiFi credentials and the correct broadcast IP (`192.168.X.255`) are set.
 3. Connect buttons to pins 2, 3, and 4 (using INPUT_PULLUP).
