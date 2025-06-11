@@ -1,3 +1,5 @@
+![Dread-wall Project Poster](poster.jpg)
+
 # Dread-wall: XR Digital Twin Escape Room
 
 **Dread-wall** is an innovative XR escape room experience built with Unity 6, Meta Quest 3, Arduino R4 WiFi, and Photon Fusion. The project demonstrates Digital Twin technology by synchronizing real-world physical inputs with a virtual escape room environment.
@@ -117,4 +119,3 @@ Special thanks to our teachers:
 for their guidance, feedback, and support throughout this project.
 
 ---
-
