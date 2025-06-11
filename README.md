@@ -1,62 +1,108 @@
-# Dread-Wall
+# Dread-wall: XR Digital Twin Escape Room
 
-A short description about the project and/or client.
+**Dread-wall** is an innovative XR escape room experience built with Unity 6, Meta Quest 3, Arduino R4 WiFi, and Photon Fusion. The project demonstrates Digital Twin technology by synchronizing real-world physical inputs with a virtual escape room environment.
 
-## Getting Started
+---
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+## 🚀 Project Overview
+
+- **Players:**  
+  - **Player 1** (VR): Immersed in a VR escape room (Meta Quest 3), solving puzzles using virtual cubes.
+  - **Player 2** (Physical): Controls the appearance of cubes in VR by pressing and holding three physical buttons (red, blue, green) connected to Arduino.
+
+- **Digital Twin Concept:**  
+  The VR environment is a 1:1 replica of the physical space. Button presses in the real world immediately trigger cube visibility in VR.
+
+- **Multiplayer:**  
+  Real-time collaboration is powered by [Photon Fusion](https://doc.photonengine.com/fusion/current/), synchronizing states across devices.
+
+---
+
+## 🛠️ Technologies Used
+
+- **Unity 6** (LTS, 6000.0.40f1)
+- **Meta Quest 3** (XR support)
+- **Arduino Uno R4 WiFi** (physical I/O)
+- **Photon Fusion 2.0.6** (networked multiplayer)
+- **Meta All-In-One SDK** (v74.0.3)
+- **OpenXR Meta** (v2.1.0)
+- **UDP Broadcast** (Arduino to Unity communication)
+- **C# (Unity)**, **C++ (Arduino IDE)**
+
+---
+
+## ⚡ Features
+
+- **Real-time Digital Twin**: Synchronous appearance/disappearance of cubes in VR based on physical button states.
+- **Collaborative Escape Room**: Two-player teamwork under time pressure as VR walls close in.
+- **Multiplayer Networking**: Robust real-time state sharing with Photon Fusion.
+- **XR Immersion**: VR player navigates a virtual room that matches the real-world layout.
+
+---
+
+## 🏗️ Hardware Setup
+
+- **1 × Arduino Uno R4 WiFi**
+- **3 × Push Buttons** (Red, Blue, Green)
+- **WiFi Router** (all devices must be on the same LAN)
+- **PC running Unity 6**
+- **Meta Quest 3** headset
+
+---
+
+## 🖥️ Software Setup
 
 ### Prerequisites
 
-The things you need before installing the project.
+- Unity 6 (6000.0.40f1 LTS)
+- Meta All-In-One SDK: 74.0.3
+- Unity OpenXR Meta: 2.1.0
+- Photon Fusion: 2.0.6
+- Arduino IDE
 
-* Unity6: 6000.0.40f1 LTS
-* Unity Packages below:
-  * Meta All-In-One SDK(unity package): version 74.0.3
-  * Unity OpenXR Meta: version 2.1.0
+### Arduino Installation
 
-* Photon Fusion: version 2.0.6
+1. Flash the provided Arduino code (`.ino`) to the Arduino Uno R4 WiFi.
+2. Ensure WiFi credentials and the correct broadcast IP (`192.168.X.255`) are set.
+3. Connect buttons to pins 2, 3, and 4 (using INPUT_PULLUP).
 
-### Installation
+### Unity Installation
 
-A step by step guide that will tell you how to get the development environment up and running.
+1. Clone this repo and open in Unity 6.
+2. Install all required packages via Unity Package Manager.
+3. Place your cubes (`CubeA`, `CubeB`, `CubeC`) in the scene and assign them in the controller script.
+4. Set up Photon Fusion for networked gameplay.
 
-```
-$ First step
-$ Another step
-$ Final step
-```
+---
 
-## Usage
+## 🔄 Usage
 
-A few examples of useful commands and/or tasks.
+- **Player 2** presses and holds a colored button.  
+- **Player 1** sees the corresponding cube appear in VR and must place it in the matching target before time runs out.  
+- Release of a button causes the cube to disappear instantly.
 
-```
-$ First example
-$ Second example
-$ And keep this in mind
-```
+---
 
-## Deployment
+## 🧑‍💻 Deployment
 
-Additional notes on how to deploy this on a live or release system. Explaining the most important branches, what pipelines they trigger and how to update the database (if anything special).
+- All devices must be on the same WiFi network for UDP broadcast.
+- Use the correct Unity build for Meta Quest 3 deployment.
+- Configure Photon Fusion for your room/server as needed.
 
-### Server
+---
 
-* Live:
-* Release:
-* Development:
+## 📚 Documentation & Links
 
-### Branches
+- [Unity MainThread Dispatcher (if needed)](https://github.com/PimDeWitte/UnityMainThreadDispatcher)
+- [Photon Fusion Docs](https://doc.photonengine.com/fusion/current/)
+- [Meta Quest SDK Docs](https://developer.oculus.com/documentation/unity/)
 
-* Master:
-* Feature:
-* Bugfix:
-* etc...
+---
 
-## Additional Documentation and Acknowledgments
+## 🤝 Acknowledgments
 
-* Project folder on server:
-* Confluence link:
-* Asana board:
-* etc...
+- [Photon Fusion Team](https://www.photonengine.com/)
+- [Meta Quest SDK](https://developer.oculus.com/)
+- Contributors: [Your Team Names Here]
+
+---
