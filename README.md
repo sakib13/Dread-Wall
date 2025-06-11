@@ -1,5 +1,3 @@
-![Dread-wall Poster](Poster.jpg)
-
 # Dread-wall: XR Digital Twin Escape Room
 
 **Dread-wall** is an innovative XR escape room experience built with Unity 6, Meta Quest 3, Arduino R4 WiFi, and Photon Fusion. The project demonstrates Digital Twin technology by synchronizing real-world physical inputs with a virtual escape room environment.
@@ -20,35 +18,15 @@
 
 ---
 
-## 🛠️ Technologies Used
-
-- **Unity 6** (LTS, 6000.0.40f1)
-- **Meta Quest 3** (XR support)
-- **Arduino Uno R4 WiFi** (physical I/O)
-- **Photon Fusion 2.0.6** (networked multiplayer)
-- **Meta All-In-One SDK** (v74.0.3)
-- **OpenXR Meta** (v2.1.0)
-- **UDP Broadcast** (Arduino to Unity communication)
-- **C# (Unity)**, **C++ (Arduino IDE)**
-
----
-
-## ⚡ Features
-
-- **Real-time Digital Twin**: Synchronous appearance/disappearance of cubes in VR based on physical button states.
-- **Collaborative Escape Room**: Two-player teamwork under time pressure as VR walls close in.
-- **Multiplayer Networking**: Robust real-time state sharing with Photon Fusion.
-- **XR Immersion**: VR player navigates a virtual room that matches the real-world layout.
-
----
-
-## 🏗️ Hardware Setup
+## 🛠️ Hardware Setup
 
 - **1 × Arduino Uno R4 WiFi**
 - **3 × Push Buttons** (Red, Blue, Green)
 - **WiFi Router** (all devices must be on the same LAN)
 - **PC running Unity 6**
 - **Meta Quest 3** headset
+
+![Arduino Button Setup](arduino.png)
 
 ---
 
@@ -64,7 +42,6 @@
 
 ### Arduino Installation
 
-- All Arduino-related source code and schematics are located in the [`Arduino`](./Arduino) folder.
 1. Flash the provided Arduino code (`.ino`) to the Arduino Uno R4 WiFi.
 2. Ensure WiFi credentials and the correct broadcast IP (`192.168.X.255`) are set.
 3. Connect buttons to pins 2, 3, and 4 (using INPUT_PULLUP).
@@ -75,6 +52,15 @@
 2. Install all required packages via Unity Package Manager.
 3. Place your cubes (`CubeA`, `CubeB`, `CubeC`) in the scene and assign them in the controller script.
 4. Set up Photon Fusion for networked gameplay.
+
+---
+
+## ⚡ Features
+
+- **Real-time Digital Twin**: Synchronous appearance/disappearance of cubes in VR based on physical button states.
+- **Collaborative Escape Room**: Two-player teamwork under time pressure as VR walls close in.
+- **Multiplayer Networking**: Robust real-time state sharing with Photon Fusion.
+- **XR Immersion**: VR player navigates a virtual room that matches the real-world layout.
 
 ---
 
@@ -102,10 +88,33 @@
 
 ---
 
-## 🤝 Acknowledgments
+## 🏆 Challenges
 
-- [Photon Fusion Team](https://www.photonengine.com/)
-- [Meta Quest SDK](https://developer.oculus.com/)
-- Contributors: [Your Team Names Here]
+- **UDP Communication:** Ensuring reliable UDP broadcast required correct binding of the Arduino's network interface and firewall configuration on the PC.
+- **Threading in Unity:** Cross-thread messaging for UDP required a thread-safe queue to update GameObjects from the main thread.
+- **XR Device Compatibility:** Integrating Meta Quest 3 and XR plugins in Unity while maintaining real-time synchronization.
+- **Multiplayer Sync:** Proper state synchronization across devices was achieved through Photon Fusion.
+- **Real-Time Responsiveness:** Ensuring cube visibility updated instantly for immersive collaboration.
 
 ---
+
+## 👨‍💻 Authors
+
+- Iman Dashtpeyma
+- Yonglong Chen
+- Sakib Ahsan Dipto
+
+---
+
+## 🙏 Acknowledgments
+
+Special thanks to our teachers:
+
+- Charles Windlin  
+- António Miguel Beleza Maciel Pinheiro Braga  
+- Jordi Solsona Belenguer  
+
+for their guidance, feedback, and support throughout this project.
+
+---
+
