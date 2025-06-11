@@ -1,4 +1,4 @@
-![Dread-wall Project Poster](poster.jpg)
+![Dread-wall Project Poster](Poster.jpg)
 
 # Dread-wall: XR Digital Twin Escape Room
 
