@@ -2,120 +2,174 @@
 
 # Dread-wall: XR Digital Twin Escape Room
 
-**Dread-wall** is an innovative XR escape room experience built with Unity 6, Meta Quest 3, Arduino R4 WiFi, and Photon Fusion. The project demonstrates Digital Twin technology by synchronizing real-world physical inputs with a virtual escape room environment.
+The Dread-Wall project is a collaborative mixed reality (MR) escape room experience designed for two players. The core idea centers around time-based puzzle solving, environmental pressure, and teamwork. One player wears a Meta Quest headset and interacts with the virtual environment, while the other player in the co-located virtual environment assists physically by using an Arduino-based button system that triggers puzzle elements. 
+
+This project aims to explore embodied interaction and spatial collaboration. It offers educational value in the domains of MR design, spatial UI, interaction modeling, and real-world embedded communication between digital twins and physical props. It also teaches design iteration, hardware-software integration, and immersive player experience tuning.
 
 ---
 
-## 🚀 Project Overview
+## Design Process
 
-- **Players:**  
-  - **Player 1** (VR): Immersed in a VR escape room (Meta Quest 3), solving puzzles using virtual cubes.
-  - **Player 2** (Physical): Controls the appearance of cubes in VR by pressing and holding three physical buttons (red, blue, green) connected to Arduino.
+We began with the intent to design an MR experience that highlights collaboration, urgency, and tactile engagement. The project followed an iterative design process, evolving from a broad multi-puzzle escape room concept into a refined short-timed challenge.
 
-- **Digital Twin Concept:**  
-  The VR environment is a 1:1 replica of the physical space. Button presses in the real world immediately trigger cube visibility in VR.
 
-- **Multiplayer:**  
-  Real-time collaboration is powered by [Photon Fusion](https://doc.photonengine.com/fusion/current/), synchronizing states across devices.
 
----
+## Initial Goals:
 
-## 🛠️ Hardware Setup
+- Create an immersive, short-duration MR game with time pressure. 
 
-- **1 × Arduino Uno R4 WiFi**
-- **3 × Push Buttons** (Red, Blue, Green)
-- **WiFi Router** (all devices must be on the same LAN)
-- **PC running Unity 6**
-- **Meta Quest 3** headset
+- Enable real-world interaction to influence MR feedback. 
 
-![Arduino Button Setup](arduino.png)
+- Foster cooperation between physically-present players to incorporate digital twin experience.
 
----
+  
 
-## 🖥️ Software Setup
+## Challenges And How We Adapted:
 
-### Prerequisites
+- Arduino-to-Unity communication: Resolved using WiFi communication over serial, triggering in-game object spawning. We used Arduino R4 in this case.
 
-- Unity 6 (6000.0.40f1 LTS)
-- Meta All-In-One SDK: 74.0.3
-- Unity OpenXR Meta: 2.1.0
-- Photon Fusion: 2.0.6
-- Arduino IDE
+- No headset at home: XR Simulator was used extensively, and prefab scaling was adapted to feel correct during final deployment.
 
-### Arduino Installation ( The_Ghost_Cube.ino exist in Arduino folder )
-
-1. Flash the provided Arduino code (`.ino`) to the Arduino Uno R4 WiFi.
-2. Ensure WiFi credentials and the correct broadcast IP (`192.168.X.255`) are set.
-3. Connect buttons to pins 2, 3, and 4 (using INPUT_PULLUP).
-
-### Unity Installation
-
-1. Clone this repo and open in Unity 6.
-2. Install all required packages via Unity Package Manager.
-3. Place your cubes (`CubeA`, `CubeB`, `CubeC`) in the scene and assign them in the controller script.
-4. Set up Photon Fusion for networked gameplay.
+- Destroying walls: We tried moving walls first as for the final escape for the player, which was unreliable in MR and XR simulator, and later switched to destroying walls using material transparency which was a simpler and more effective solution.
 
 ---
 
-## ⚡ Features
 
-- **Real-time Digital Twin**: Synchronous appearance/disappearance of cubes in VR based on physical button states.
-- **Collaborative Escape Room**: Two-player teamwork under time pressure as VR walls close in.
-- **Multiplayer Networking**: Robust real-time state sharing with Photon Fusion.
-- **XR Immersion**: VR player navigates a virtual room that matches the real-world layout.
 
----
+## Design Decisions And Interaction Justifications
 
-## 🔄 Usage
+We deliberately chose interactions and feedback mechanisms that supported immersion, usability, and hardware feasibility within our limited timeframe and resources. Below is a breakdown of our key interaction decisions and why each was preferred over alternatives:
 
-- **Player 2** presses and holds a colored button.  
-- **Player 1** sees the corresponding cube appear in VR and must place it in the matching target before time runs out.  
-- Release of a button causes the cube to disappear instantly.
+- ## Hand Tracking With HandGrab Interactions
 
----
 
-## 🧑‍💻 Deployment
+We used Meta's built-in HandGrab interactions because they offer more stability and intuitive use in MR than gesture-based systems. Gesture recognition (like custom hand signs) was considered but discarded due to its inconsistency, higher learning curve, and limited debugging visibility.
 
-- All devices must be on the same WiFi network for UDP broadcast.
-- Use the correct Unity build for Meta Quest 3 deployment.
-- Configure Photon Fusion for your room/server as needed.
+- ## Color Matching Mechanics
 
----
 
-## 📚 Documentation & Links
+The decision to use simple RGB-based color matching was rooted in visual clarity and rapid player understanding. Complex spatial puzzles or symbol-based logic were ruled out to keep the experience short, intuitive, and language-independent.
 
-- [Unity MainThread Dispatcher (if needed)](https://github.com/PimDeWitte/UnityMainThreadDispatcher)
-- [Photon Fusion Docs](https://doc.photonengine.com/fusion/current/)
-- [Meta Quest SDK Docs](https://developer.oculus.com/documentation/unity/)
+- ## Sound Feedback
 
----
 
-## 🏆 Challenges
+Audio was added to reinforce puzzle state changes (e.g., cube placement, win/loss). We opted for short, distinct sound cues over longer narration to avoid distraction during timed gameplay.
 
-- **UDP Communication:** Ensuring reliable UDP broadcast required correct binding of the Arduino's network interface and firewall configuration on the PC.
-- **Threading in Unity:** Cross-thread messaging for UDP required a thread-safe queue to update GameObjects from the main thread.
-- **XR Device Compatibility:** Integrating Meta Quest 3 and XR plugins in Unity while maintaining real-time synchronization.
-- **Multiplayer Sync:** Proper state synchronization across devices was achieved through Photon Fusion.
-- **Real-Time Responsiveness:** Ensuring cube visibility is updated instantly for immersive collaboration.
+- ## Destroying Walls Instead Of Moving Walls
+
+
+Initially, moving walls were used to simulate pressure, but physics inconsistencies and MR occlusion issues led us to switch to fading. It created the same emotional effect while being much smoother visually and more technically reliable.
+
+- ## Countdown Pressure Via Vignette Shrink And Timer
+
+
+Instead of a simple countdown text, we used visual tunnel vision (vignette) to simulate spatial shrinking. This added immersive tension without confusing the player, as it physically represented time running out.
 
 ---
 
-## 👨‍💻 Authors
+## Features And Functionalities
 
-- Iman Dashtpeyma
-- Yonglong Chen
-- Sakib Ahsan Dipto
+- Two-player experience (both present in real-world space). 
+
+- Player 2 uses an Arduino device to send button presses corresponding to colored puzzle cubes.
+
+- Player 1, using the Meta Quest headset, sees the generated puzzle pieces and color-coded target panels over time.
+
+- Player 1 must grab and match the cubes to the correct target pads. 
+
+- Game includes a 60-second timer shown via UI or vignette compression. 
+
+- On success, a visual and audio cue plays, and a wall is destroyed as to reveal the escape zone for the player.
+
+- On failure, player receives a message and walls keep shrinking to create the immersion of the player being squeezed in the world.
 
 ---
 
-## 🙏 Acknowledgments
+## Installation Process
 
-Special thanks to our teachers:
+To build and run the Dread-Wall project:
 
-- Charles Windlin  
-- António Miguel Beleza Maciel Pinheiro Braga  
-- Jordi Solsona Belenguer  
+## Requirements:
 
-for their guidance, feedback, and support throughout this project.
+- Unity 6 or above 
+- Meta XR Plugin + XR Interaction Toolkit
+- Meta Quest 3 headset (for full testing) / Or similar kind 
+- Arduino Uno with WiFi module (e.g., ESP8266), Preferably Arduino R4.
+
+## Unity Setup:
+
+1. Clone the repository. 
+2. Open in Unity 6. 
+3. Go to Package Manager, install Meta XR SDK**(v74.0.3)**, XR Interaction Toolkit. 
+4. Switch platform to Android. 
+5. Enable OpenXR under XR Plug-in Management. 
+6. Add scene (MainScene) to Build Settings. 
+7. Build & Run with Meta Quest headset connected.
+
+## Arduino Setup:
+
+- Attach 3 push buttons wired to GPIO pins. 
+- Send WiFi messages to Unity. 
+- Use Unity's UDP Listener or MQTT for message reception.
+
+## Unity Dependencies:
+
+- Input System - Meta SDK and Building Blocks (HandGrab, Poke, Spawnable Objects) - Shader Graph for Material Transparency This step-by-step installation allows complete project reproducibility by any Unity user with headset access.
+
+---
+
+## Usage  
+
+1. Player 1 wears headset and presses in-game activator button.  
+
+   ![StartUI](3_image_0.jpg)
+
+2. Player 2 presses a color-coded button (Red, Green, Blue).  
+
+   ![Arduino](Arduino.png)
+
+3. The timer appears on top of the player.  
+
+   ![Timer](4_image_0.jpg)
+
+4. Corresponding color puzzle block spawns in MR.  
+
+5. Player 1 grabs the virtual piece using HandGrab interaction and places it on its  matching color pad.  
+
+6. Repeat for all 3 pieces.  
+
+7. If completed within 60 seconds, wall gets destroyed and exit audio is played.  
+
+8. If failed, walls keep squeezing to the player with subtle failure cue.
+
+   ![FailEnd](4_image_2.jpg)
+
+## Best practices to experience Dread-Wall:  
+
+- Make sure players are in the same physical room.  
+- Arduino and WiFi must be on same network as the Unity build. Preferably a  strong network with higher bandwidth.  
+- Use debug logs during development for input verification. 
+
+---
+
+## References
+
+- ***The Room VR: A Dark Matter*** - for narrative-driven MR pacing.
+
+- ***Keep Talking and Nobody Explodes*** - inspired our two-player cooperative format.
+
+- ***Meta Building Blocks Samples*** - used as base prefabs for hand interactions.
+
+- ***Cryptic Cabinet*** - guided our visual tension-building approach.
+
+---
+
+## Contributors
+
+Sakib Ahsan Dipto (sakibahsandipto@gmail.com) 
+
+Yonglong Chen (cats1821086364@gmail.com) 
+
+Iman Dashtpeyma (iman.dashtpeyma@gmail.com)
 
 ---
