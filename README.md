@@ -126,7 +126,7 @@ To build and run the Dread-Wall project:
 
 2. Player 2 presses a color-coded button (Red, Green, Blue).  
 
-   ![Arduino](Arduino.png)
+   ![Arduino](arduino.png)
 
 3. The timer appears on top of the player.  
 
